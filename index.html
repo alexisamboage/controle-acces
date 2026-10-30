@@ -71,6 +71,13 @@
       <button id="bouton-importer" class="gros-bouton" type="button">Importer le fichier Excel</button>
       <p class="info petit">Chaque import remplace entièrement la liste précédente.</p>
       <div id="resume-import"></div>
+
+      <div id="zone-partage" hidden>
+        <h2>Partager avec les autres profs</h2>
+        <p class="info">Crée un fichier allégé avec seulement le nom, le prénom, l'année de naissance et le club, <strong>sans téléphone ni email</strong>. Envoie-le aux profs des clubs partenaires : ils l'importent dans leur app.</p>
+        <button id="bouton-partager-liste" class="gros-bouton bouton-secondaire" type="button">Créer la liste à partager</button>
+        <p class="info petit">Ce fichier contient des noms d'enfants : envoie-le uniquement aux profs.</p>
+      </div>
     </section>
 
     <!-- Écran 4 : réglages et à propos -->
@@ -92,7 +99,17 @@
         <p class="confirmation" hidden>✓ Réglages enregistrés</p>
       </form>
       <h2>À propos</h2>
-      <p class="info">Version <span id="version"></span></p>
+      <div class="carte a-propos">
+        <p class="carte-titre">Contrôle d'accès</p>
+        <p class="petit">Club Yamabushi · Version <span id="version"></span></p>
+        <ul class="remarques">
+          <li>Fonctionne sans internet une fois la liste importée.</li>
+          <li>Les données restent sur ce téléphone. Rien n'est envoyé sur internet, sauf les emails et fichiers que tu envoies toi-même.</li>
+          <li>L'app se met à jour toute seule quand le téléphone a du réseau. La liste et les non-inscrits sont conservés.</li>
+        </ul>
+      </div>
+      <button id="bouton-maj" class="gros-bouton bouton-secondaire" type="button">Vérifier les mises à jour</button>
+      <p id="message-maj" class="info petit" hidden></p>
     </section>
   </main>
 

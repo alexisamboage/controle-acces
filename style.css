@@ -229,6 +229,9 @@ h2:not(:first-child) { margin-top: 36px; }
   overflow-wrap: anywhere;
 }
 .gros-bouton.bouton-secondaire { color: var(--papier); background: var(--trait); }
+#zone-partage .info { margin: 0 0 14px; }
+#zone-partage .info.petit { margin: 10px 0 0; text-align: center; }
+#message-maj { text-align: center; }
 
 /* Bouton blanc dans l'écran rouge */
 .gros-bouton.bouton-noter {

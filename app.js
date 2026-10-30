@@ -112,6 +112,24 @@ function afficherResumeImport(zone, resume) {
   zone.replaceChildren(carte);
 }
 
+// Liste allégée pour les autres profs : une feuille par club, sans téléphone ni email.
+// Elle se réimporte comme le fichier complet, et les identifiants restent les mêmes.
+document.getElementById('bouton-partager-liste').addEventListener('click', () => {
+  const classeur = XLSX.utils.book_new();
+  const parClub = {};
+  membres.forEach(m => { (parClub[m.club] ||= []).push(m); });
+  Object.keys(parClub).sort().forEach(club => {
+    const lignes = parClub[club]
+      .sort((a, b) => a.nom.localeCompare(b.nom, 'fr') || a.prenom.localeCompare(b.prenom, 'fr'))
+      .map(m => ({ 'Nom': m.nom, 'Prénom': m.prenom, 'Année de naissance': m.annee ? Number(m.annee) : '', "Club d'appartenance": m.club }));
+    const feuille = XLSX.utils.json_to_sheet(lignes, { header: ['Nom', 'Prénom', 'Année de naissance', "Club d'appartenance"] });
+    feuille['!cols'] = [{ wch: 22 }, { wch: 18 }, { wch: 18 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(classeur, feuille, club.replace(/[:\\/?*[\]]/g, ' ').slice(0, 31));
+  });
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  partagerClasseur(classeur, `liste-membres-${aujourdhui}.xlsx`, 'Liste des membres');
+});
+
 // Met à jour l'écran Liste et l'accueil selon la liste enregistrée
 async function rafraichirEtat() {
   const infos = await lireReglage('import');
@@ -119,6 +137,7 @@ async function rafraichirEtat() {
   zone.replaceChildren();
   listeImportee = !!infos;
   membres = infos ? (await tousLesMembres()).map(preparerMembre) : [];
+  document.getElementById('zone-partage').hidden = !infos;
   lancerRecherche();
 
   if (!infos) {
@@ -320,3 +339,22 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+// Bouton « Vérifier les mises à jour » (écran Réglages)
+document.getElementById('bouton-maj').addEventListener('click', async () => {
+  const message = document.getElementById('message-maj');
+  message.hidden = false;
+  if (!navigator.onLine) {
+    message.textContent = 'Pas de réseau. Réessaie quand le téléphone est connecté.';
+    return;
+  }
+  message.textContent = 'Vérification…';
+  try {
+    const enregistrement = await navigator.serviceWorker.getRegistration();
+    await enregistrement.update();
+    // Si une nouvelle version existe, l'app se recharge toute seule dans quelques secondes
+    setTimeout(() => { message.textContent = 'Tu as la dernière version.'; }, 4000);
+  } catch {
+    message.textContent = 'Impossible de vérifier pour le moment. Réessaie plus tard.';
+  }
+});
