@@ -25,22 +25,28 @@
   <main>
     <!-- Écran 1 : la recherche -->
     <section id="ecran-controle" class="ecran actif">
-      <input id="recherche" class="champ-recherche" type="search"
-             placeholder="Nom ou prénom…" aria-label="Nom ou prénom"
-             autocomplete="off" autocorrect="off" autocapitalize="off"
-             spellcheck="false" enterkeyhint="search">
-      <div id="resultats">
-        <div class="etat-vide" id="accueil-sans-liste">
-          <img src="images/embleme.png" alt="" width="96" height="96">
-          <p>Aucune liste de membres pour l'instant.</p>
-          <button type="button" class="gros-bouton" data-aller="ecran-liste">Importer la liste</button>
-        </div>
-        <div class="etat-vide" id="accueil-avec-liste" hidden>
-          <img src="images/embleme.png" alt="" width="96" height="96">
-          <p>Tape au moins 2 lettres d'un nom ou d'un prénom.</p>
-          <p class="petit" id="accueil-compte"></p>
-        </div>
+      <div class="barre-recherche">
+        <input id="recherche" class="champ-recherche" type="text"
+               placeholder="Nom ou prénom…" aria-label="Nom ou prénom"
+               autocomplete="off" autocorrect="off" autocapitalize="off"
+               spellcheck="false" enterkeyhint="search">
+        <button id="effacer" class="bouton-effacer" type="button" aria-label="Effacer la recherche" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
       </div>
+
+      <div class="etat-vide" id="accueil-sans-liste">
+        <img src="images/embleme.png" alt="" width="96" height="96">
+        <p>Aucune liste de membres pour l'instant.</p>
+        <button type="button" class="gros-bouton" data-aller="ecran-liste">Importer la liste</button>
+      </div>
+      <div class="etat-vide" id="accueil-avec-liste" hidden>
+        <img src="images/embleme.png" alt="" width="96" height="96">
+        <p>Tape au moins 2 lettres d'un nom ou d'un prénom.</p>
+        <p class="petit" id="accueil-compte"></p>
+      </div>
+
+      <div id="resultats" aria-live="polite"></div>
     </section>
 
     <!-- Écran 2 : les non-inscrits notés -->
@@ -71,6 +77,15 @@
     </section>
   </main>
 
+  <!-- Fiche d'un membre (téléphone, email) -->
+  <dialog id="fiche" class="fiche">
+    <p class="fiche-statut">✓ Inscrit</p>
+    <h3 id="fiche-nom"></h3>
+    <div id="fiche-details"></div>
+    <div id="fiche-contacts"></div>
+    <button type="button" class="gros-bouton bouton-secondaire" id="fiche-fermer">Fermer</button>
+  </dialog>
+
   <nav class="onglets" aria-label="Écrans">
     <button type="button" class="onglet actif" data-ecran="ecran-controle">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -94,6 +109,7 @@
   <script src="lib/xlsx.full.min.js"></script>
   <script src="import.js"></script>
   <script src="db.js"></script>
+  <script src="recherche.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

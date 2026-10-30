@@ -13,6 +13,7 @@ const FICHIERS = [
   'version.js',
   'import.js',
   'db.js',
+  'recherche.js',
   'lib/xlsx.full.min.js',
   'manifest.webmanifest',
   'polices/anton.woff2',

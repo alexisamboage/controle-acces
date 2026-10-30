@@ -117,8 +117,9 @@ async function rafraichirEtat() {
   const infos = await lireReglage('import');
   const zone = document.getElementById('etat-liste');
   zone.replaceChildren();
-  document.getElementById('accueil-sans-liste').hidden = !!infos;
-  document.getElementById('accueil-avec-liste').hidden = !infos;
+  listeImportee = !!infos;
+  membres = infos ? (await tousLesMembres()).map(preparerMembre) : [];
+  lancerRecherche();
 
   if (!infos) {
     afficherMessage(zone, 'info', 'Aucune liste importée. Importe le fichier Excel des membres pour commencer.');
@@ -158,6 +159,139 @@ async function rafraichirEtat() {
   });
   carte.append(clubs);
   zone.append(carte);
+}
+
+// ---------- Écran Contrôle : la recherche ----------
+let membres = [];
+let listeImportee = false;
+const zoneResultats = document.getElementById('resultats');
+const boutonEffacer = document.getElementById('effacer');
+
+champRecherche.addEventListener('input', lancerRecherche);
+boutonEffacer.addEventListener('click', () => {
+  champRecherche.value = '';
+  lancerRecherche();
+  champRecherche.focus();
+});
+// La touche « Rechercher » du clavier ferme le clavier pour mieux voir le résultat
+champRecherche.addEventListener('keydown', e => { if (e.key === 'Enter') champRecherche.blur(); });
+
+function lancerRecherche() {
+  const saisie = champRecherche.value;
+  boutonEffacer.hidden = saisie === '';
+  const reponse = listeImportee ? rechercher(membres, saisie) : null;
+
+  document.getElementById('accueil-sans-liste').hidden = listeImportee;
+  document.getElementById('accueil-avec-liste').hidden = !listeImportee || reponse !== null;
+  zoneResultats.replaceChildren();
+  if (!reponse) return;
+
+  if (reponse.total > 0) afficherTrouves(reponse);
+  else afficherNonTrouve(saisie);
+}
+
+// Vert : la ou les personnes trouvées
+function afficherTrouves({ resultats, total }) {
+  const entete = document.createElement('p');
+  entete.className = 'entete-trouves';
+  entete.textContent = total === 1 ? '✓ Inscrit' : `✓ ${total} inscrits trouvés`;
+  zoneResultats.append(entete);
+  if (total > resultats.length) {
+    const plus = document.createElement('p');
+    plus.className = 'petit';
+    plus.textContent = `Les ${resultats.length} premiers sont affichés. Tape quelques lettres de plus.`;
+    zoneResultats.append(plus);
+  }
+  zoneResultats.append(listeMembres(resultats, 'trouve'));
+}
+
+// Rouge : personne ne correspond
+function afficherNonTrouve(saisie) {
+  const bloc = document.createElement('div');
+  bloc.className = 'non-trouve';
+  bloc.innerHTML = `
+    <div class="tampon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+    <p class="non-trouve-titre">Non trouvé</p>
+    <p class="non-trouve-sous-titre">À vérifier</p>
+    <p class="non-trouve-saisie"></p>`;
+  bloc.querySelector('.non-trouve-saisie').textContent = `« ${saisie.trim()} » n'est pas dans la liste.`;
+  zoneResultats.append(bloc);
+
+  const proches = nomsProches(membres, saisie);
+  if (proches.length) {
+    const titre = document.createElement('p');
+    titre.className = 'titre-proches';
+    titre.textContent = 'Noms proches ? Vérifie l\'orthographe.';
+    zoneResultats.append(titre, listeMembres(proches, 'proche'));
+  }
+}
+
+// Liste de membres : un gros bouton par personne, qui ouvre sa fiche
+function listeMembres(liste, type) {
+  const ul = document.createElement('ul');
+  ul.className = 'liste-resultats';
+  liste.forEach(m => {
+    const li = document.createElement('li');
+    const bouton = document.createElement('button');
+    bouton.type = 'button';
+    bouton.className = 'resultat resultat-' + type;
+
+    const nom = document.createElement('span');
+    nom.className = 'resultat-nom';
+    const nomFamille = document.createElement('strong');
+    nomFamille.textContent = m.nom;
+    nom.append(nomFamille, ' ' + m.prenom);
+
+    const infos = document.createElement('span');
+    infos.className = 'resultat-infos';
+    const annee = document.createElement('span');
+    annee.textContent = m.annee || 'année ?';
+    infos.append(badgeClub(m.club), annee);
+
+    bouton.append(nom, infos);
+    bouton.addEventListener('click', () => ouvrirFiche(m));
+    li.append(bouton);
+    ul.append(li);
+  });
+  return ul;
+}
+
+// ---------- Fiche d'un membre ----------
+const fiche = document.getElementById('fiche');
+document.getElementById('fiche-fermer').addEventListener('click', () => fiche.close());
+fiche.addEventListener('click', e => { if (e.target === fiche) fiche.close(); });
+
+function ouvrirFiche(m) {
+  document.getElementById('fiche-nom').textContent = `${m.nom} ${m.prenom}`;
+
+  const details = document.getElementById('fiche-details');
+  const annee = document.createElement('span');
+  annee.textContent = m.annee ? `Né(e) en ${m.annee}` : 'Année de naissance inconnue';
+  details.replaceChildren(badgeClub(m.club), annee);
+
+  const contacts = document.getElementById('fiche-contacts');
+  contacts.replaceChildren();
+  if (m.telephone) {
+    const lien = document.createElement('a');
+    lien.className = 'contact';
+    lien.href = 'tel:' + m.telephone.replace(/[^\d+]/g, '');
+    lien.textContent = '📞 ' + m.telephone;
+    contacts.append(lien);
+  }
+  if (m.email) {
+    const lien = document.createElement('a');
+    lien.className = 'contact';
+    lien.href = 'mailto:' + m.email;
+    lien.textContent = '✉ ' + m.email;
+    contacts.append(lien);
+  }
+  if (!m.telephone && !m.email) {
+    const vide = document.createElement('p');
+    vide.className = 'petit';
+    vide.textContent = 'Pas de téléphone ni d\'email dans la liste.';
+    contacts.append(vide);
+  }
+  fiche.showModal();
 }
 
 rafraichirEtat();
