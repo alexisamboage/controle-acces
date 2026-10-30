@@ -1,0 +1,9 @@
+# Ne JAMAIS publier de fichiers de membres (données personnelles)
+*.xlsx
+*.xls
+*.csv
+
+# Fichiers temporaires d'Excel et de Windows
+~$*
+Thumbs.db
+desktop.ini
