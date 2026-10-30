@@ -32,7 +32,7 @@ Quand tu reçois une nouvelle liste, importe-la de la même façon : elle rempla
 1. Dans l'onglet **Contrôle**, tape au moins 2 lettres du nom ou du prénom, dans n'importe quel ordre.
 2. **Vert = inscrit.** Touche le nom pour voir le club et l'année de naissance.
 3. **Rouge = non trouvé.** Essaie d'abord le prénom seul, puis le nom seul, et regarde les **« Noms proches ? »** proposés.
-4. Si la personne n'est vraiment pas dans la liste, touche **Noter comme non inscrit**. Remplis le nom (et si possible le téléphone, celui d'un parent pour un enfant), puis touche **Enregistrer**.
+4. Si la personne n'est vraiment pas dans la liste, touche **Noter comme non inscrit**. Remplis le nom et, si possible, le téléphone et l'email (ceux d'un parent pour un enfant), puis touche **Enregistrer**.
 5. Touche **✉ Prévenir l'administration** : l'app email s'ouvre avec le message déjà écrit. Touche **Envoyer**. Sans réseau, l'email partira tout seul plus tard.
 
 ## 4. Exporter les non-inscrits

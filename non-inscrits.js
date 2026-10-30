@@ -28,6 +28,7 @@ formNonInscrit.addEventListener('submit', async e => {
     date: new Date().toISOString(),
     nomPrenom: nettoyer(champs.nomPrenom.value),
     telephone: nettoyer(champs.telephone.value),
+    email: nettoyer(champs.email.value).replace(/\s/g, ''),
     raison: champs.raison.value || '',
     remarque: nettoyer(champs.remarque.value),
     clubCours: profil?.club || '',
@@ -80,6 +81,7 @@ function lienEmail(fiche) {
     `- Nom et prénom : ${fiche.nomPrenom}`
   ];
   if (fiche.telephone) lignes.push(`- Téléphone : ${fiche.telephone}`);
+  if (fiche.email) lignes.push(`- Email : ${fiche.email}`);
   if (fiche.raison) lignes.push(`- Raison : ${fiche.raison}`);
   if (fiche.remarque) lignes.push(`- Remarque : ${fiche.remarque}`);
   lignes.push(
@@ -118,7 +120,7 @@ async function afficherNonInscrits() {
     quand.textContent = `${dateCourte(fiche.date)} à ${heureCourte(fiche.date)}` + (fiche.clubCours ? ` · ${fiche.clubCours}` : '');
     li.append(nom, quand);
 
-    const details = [fiche.raison, fiche.telephone && '📞 ' + fiche.telephone, fiche.remarque].filter(Boolean);
+    const details = [fiche.raison, fiche.telephone && '📞 ' + fiche.telephone, fiche.email && '✉ ' + fiche.email, fiche.remarque].filter(Boolean);
     if (details.length) {
       const p = document.createElement('p');
       p.className = 'non-inscrit-details';
@@ -164,13 +166,14 @@ document.getElementById('bouton-exporter').addEventListener('click', async () =>
     'Heure': heureCourte(f.date),
     'Nom et prénom': f.nomPrenom,
     'Téléphone': f.telephone,
+    'Email': f.email || '',
     'Raison': f.raison,
     'Remarque': f.remarque,
     'Club du cours': f.clubCours,
     'Administration prévenue': f.emailPrepare ? 'Oui' : 'Non'
   }));
   const feuille = XLSX.utils.json_to_sheet(lignes);
-  feuille['!cols'] = [{ wch: 11 }, { wch: 7 }, { wch: 28 }, { wch: 16 }, { wch: 16 }, { wch: 30 }, { wch: 14 }, { wch: 12 }];
+  feuille['!cols'] = [{ wch: 11 }, { wch: 7 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 16 }, { wch: 30 }, { wch: 14 }, { wch: 12 }];
   const classeur = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(classeur, feuille, 'Non-inscrits');
   const aujourdhui = new Date().toISOString().slice(0, 10);
