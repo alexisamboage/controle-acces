@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Vérification hors ligne</title>
+<pre id="r">en cours…</pre>
+<script>
+// Page de test (ordinateur uniquement) : vérifie que le service worker
+// s'installe et met bien tous les fichiers de l'app en cache.
+(async () => {
+  const sortie = document.getElementById('r');
+  try {
+    await navigator.serviceWorker.register('../sw.js', { scope: '../' });
+    const enr = await navigator.serviceWorker.ready;
+    const noms = await caches.keys();
+    const cache = await caches.open(noms[0]);
+    const fichiers = (await cache.keys()).map(r => new URL(r.url).pathname);
+    sortie.textContent = 'ETAT=' + enr.active.state + '\nCACHE=' + noms.join(',') + '\nFICHIERS=' + fichiers.length + '\n' + fichiers.join('\n');
+  } catch (e) {
+    sortie.textContent = 'ERREUR=' + e.message;
+  }
+})();
+</script>

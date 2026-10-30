@@ -1,6 +1,3 @@
-// Date de version, affichée dans « À propos ». À changer à chaque publication.
-const VERSION = '2026-10-30';
-
 document.getElementById('version').textContent = VERSION;
 
 const champRecherche = document.getElementById('recherche');
@@ -23,3 +20,19 @@ document.querySelectorAll('[data-aller]').forEach(bouton => {
 
 // Focus automatique sur la recherche à l'ouverture
 champRecherche.focus();
+
+// Mode hors ligne + mise à jour automatique.
+// Quand une nouvelle version est publiée, le téléphone la télécharge dès qu'il
+// a du réseau, puis l'app se recharge toute seule (les données sont conservées).
+if ('serviceWorker' in navigator) {
+  const dejaControlee = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (dejaControlee) location.reload();
+  });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(enregistrement => {
+    // Vérifie s'il y a une nouvelle version à chaque retour dans l'app
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') enregistrement.update().catch(() => {});
+    });
+  });
+}
