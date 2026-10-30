@@ -30,10 +30,15 @@
              autocomplete="off" autocorrect="off" autocapitalize="off"
              spellcheck="false" enterkeyhint="search">
       <div id="resultats">
-        <div class="etat-vide">
+        <div class="etat-vide" id="accueil-sans-liste">
           <img src="images/embleme.png" alt="" width="96" height="96">
           <p>Aucune liste de membres pour l'instant.</p>
           <button type="button" class="gros-bouton" data-aller="ecran-liste">Importer la liste</button>
+        </div>
+        <div class="etat-vide" id="accueil-avec-liste" hidden>
+          <img src="images/embleme.png" alt="" width="96" height="96">
+          <p>Tape au moins 2 lettres d'un nom ou d'un prénom.</p>
+          <p class="petit" id="accueil-compte"></p>
         </div>
       </div>
     </section>
@@ -49,8 +54,12 @@
     <!-- Écran 3 : import de la liste -->
     <section id="ecran-liste" class="ecran">
       <h2>Liste des membres</h2>
-      <button class="gros-bouton" type="button" disabled>Importer le fichier Excel</button>
-      <p class="info">Disponible à la prochaine étape.</p>
+      <div id="etat-liste"></div>
+      <input id="fichier" type="file" hidden
+             accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+      <button id="bouton-importer" class="gros-bouton" type="button">Importer le fichier Excel</button>
+      <p class="info petit">Chaque import remplace entièrement la liste précédente.</p>
+      <div id="resume-import"></div>
     </section>
 
     <!-- Écran 4 : réglages et à propos -->
@@ -82,6 +91,9 @@
   </nav>
 
   <script src="version.js"></script>
+  <script src="lib/xlsx.full.min.js"></script>
+  <script src="import.js"></script>
+  <script src="db.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

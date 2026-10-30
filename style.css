@@ -119,6 +119,67 @@ h2:not(:first-child) { margin-top: 36px; }
 .etat-vide img { opacity: 0.9; }
 .etat-vide .gros-bouton { max-width: 340px; }
 
+.petit { font-size: 0.85rem; color: var(--cendre); }
+[hidden] { display: none !important; }
+
+/* Cartes d'information (écran Liste) */
+.carte {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  background: var(--laque);
+  border: 1px solid var(--trait);
+  border-radius: 14px;
+}
+.carte p { margin: 0; }
+.carte-titre {
+  font-family: var(--titre);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.carte .petit { margin-top: 4px; }
+
+.liste-clubs, .remarques { list-style: none; margin: 14px 0 0; padding: 0; }
+.liste-clubs li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--trait);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.remarques li {
+  padding: 8px 0;
+  border-top: 1px solid var(--trait);
+  font-size: 0.9rem;
+  color: var(--cendre);
+}
+
+/* Badge de club : couleur attribuée automatiquement à chaque club du fichier */
+.badge-club {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 2px solid var(--couleur-club);
+  border-radius: 8px;
+  color: var(--couleur-club);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.bandeau {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.bandeau-info { background: var(--laque); border: 1px solid var(--trait); color: var(--cendre); }
+.bandeau-alerte { background: #3a2a05; border: 2px solid #f5b301; color: #ffd76a; }
+
+#bouton-importer + .info { margin-top: 8px; text-align: center; }
+
 .gros-bouton {
   width: 100%;
   min-height: 64px;
