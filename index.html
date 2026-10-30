@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#111318">
+  <meta name="theme-color" content="#0c0b0b">
   <title>Contrôle d'accès Club Yamabushi</title>
+  <link rel="icon" href="images/icone-192.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="entete">
-    <h1>Contrôle d'accès</h1>
-    <p>Club Yamabushi</p>
+    <img class="entete-embleme" src="images/embleme.png" alt="" width="52" height="52">
+    <div>
+      <h1>Contrôle d'accès</h1>
+      <p>Club Yamabushi</p>
+    </div>
   </header>
 
   <main>
@@ -20,15 +25,21 @@
              placeholder="Nom ou prénom…" aria-label="Nom ou prénom"
              autocomplete="off" autocorrect="off" autocapitalize="off"
              spellcheck="false" enterkeyhint="search">
-      <div id="resultats" class="message-vide">
-        Importe d'abord la liste des membres (onglet « Liste »).
+      <div id="resultats">
+        <div class="etat-vide">
+          <img src="images/embleme.png" alt="" width="96" height="96">
+          <p>Aucune liste de membres pour l'instant.</p>
+          <button type="button" class="gros-bouton" data-aller="ecran-liste">Importer la liste</button>
+        </div>
       </div>
     </section>
 
     <!-- Écran 2 : les non-inscrits notés -->
     <section id="ecran-non-inscrits" class="ecran">
       <h2>Non-inscrits</h2>
-      <p class="message-vide">Aucun non-inscrit noté pour l'instant.</p>
+      <div class="etat-vide">
+        <p>Personne n'a été noté.<br>Quand une recherche ne trouve rien, note la personne depuis l'écran Contrôle.</p>
+      </div>
     </section>
 
     <!-- Écran 3 : import de la liste -->

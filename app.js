@@ -16,5 +16,10 @@ document.querySelectorAll('.onglet').forEach(onglet => {
   onglet.addEventListener('click', () => afficherEcran(onglet.dataset.ecran));
 });
 
+// Boutons qui mènent vers un autre écran (ex. « Importer la liste »)
+document.querySelectorAll('[data-aller]').forEach(bouton => {
+  bouton.addEventListener('click', () => afficherEcran(bouton.dataset.aller));
+});
+
 // Focus automatique sur la recherche à l'ouverture
 champRecherche.focus();
