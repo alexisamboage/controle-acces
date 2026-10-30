@@ -123,10 +123,12 @@ async function rafraichirEtat() {
 
   if (!infos) {
     afficherMessage(zone, 'info', 'Aucune liste importée. Importe le fichier Excel des membres pour commencer.');
+    await chargerReglages([]);
     return;
   }
 
   definirCouleursClubs(Object.keys(infos.parClub));
+  await chargerReglages(Object.keys(infos.parClub));
   document.getElementById('accueil-compte').textContent = `${infos.total} membres dans la liste`;
 
   const date = new Date(infos.date);
@@ -215,6 +217,12 @@ function afficherNonTrouve(saisie) {
     <p class="non-trouve-sous-titre">À vérifier</p>
     <p class="non-trouve-saisie"></p>`;
   bloc.querySelector('.non-trouve-saisie').textContent = `« ${saisie.trim()} » n'est pas dans la liste.`;
+  const noter = document.createElement('button');
+  noter.type = 'button';
+  noter.className = 'gros-bouton bouton-noter';
+  noter.textContent = 'Noter comme non inscrit';
+  noter.addEventListener('click', () => ouvrirFormulaireNonInscrit(saisie));
+  bloc.append(noter);
   zoneResultats.append(bloc);
 
   const proches = nomsProches(membres, saisie);
@@ -295,6 +303,7 @@ function ouvrirFiche(m) {
 }
 
 rafraichirEtat();
+afficherNonInscrits();
 
 // Mode hors ligne + mise à jour automatique.
 // Quand une nouvelle version est publiée, le téléphone la télécharge dès qu'il

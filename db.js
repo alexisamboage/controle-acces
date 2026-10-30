@@ -1,15 +1,17 @@
 // Stockage dans le téléphone (IndexedDB). Rien ne quitte l'appareil.
 //   membres     : la liste importée (remplacée entièrement à chaque import)
 //   reglages    : date du dernier import, club du cours, etc. (clé → valeur)
+//   nonInscrits : les personnes notées comme non inscrites (vidé à la main)
 const BASE = 'controle-acces';
 
 function ouvrirBase() {
   return new Promise((ok, echec) => {
-    const demande = indexedDB.open(BASE, 1);
+    const demande = indexedDB.open(BASE, 2);
     demande.onupgradeneeded = () => {
       const base = demande.result;
       if (!base.objectStoreNames.contains('membres')) base.createObjectStore('membres', { keyPath: 'id' });
       if (!base.objectStoreNames.contains('reglages')) base.createObjectStore('reglages');
+      if (!base.objectStoreNames.contains('nonInscrits')) base.createObjectStore('nonInscrits', { keyPath: 'id', autoIncrement: true });
     };
     demande.onsuccess = () => ok(demande.result);
     demande.onerror = () => echec(demande.error);
@@ -58,4 +60,21 @@ function lireReglage(cle) {
 
 function ecrireReglage(cle, valeur) {
   return transaction(['reglages'], 'readwrite', tx => { tx.objectStore('reglages').put(valeur, cle); });
+}
+
+// Ajoute ou met à jour une personne non inscrite ; renvoie son numéro
+function enregistrerNonInscrit(fiche) {
+  return transaction(['nonInscrits'], 'readwrite', tx => enPromesse(tx.objectStore('nonInscrits').put(fiche)));
+}
+
+function tousLesNonInscrits() {
+  return transaction(['nonInscrits'], 'readonly', tx => enPromesse(tx.objectStore('nonInscrits').getAll()));
+}
+
+function supprimerNonInscrit(id) {
+  return transaction(['nonInscrits'], 'readwrite', tx => { tx.objectStore('nonInscrits').delete(id); });
+}
+
+function viderNonInscrits() {
+  return transaction(['nonInscrits'], 'readwrite', tx => { tx.objectStore('nonInscrits').clear(); });
 }

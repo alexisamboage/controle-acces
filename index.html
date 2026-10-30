@@ -52,9 +52,14 @@
     <!-- Écran 2 : les non-inscrits notés -->
     <section id="ecran-non-inscrits" class="ecran">
       <h2>Non-inscrits</h2>
-      <div class="etat-vide">
+      <div class="etat-vide" id="non-inscrits-vide">
         <p>Personne n'a été noté.<br>Quand une recherche ne trouve rien, note la personne depuis l'écran Contrôle.</p>
       </div>
+      <div class="actions-non-inscrits" id="actions-non-inscrits" hidden>
+        <button class="gros-bouton" type="button" id="bouton-exporter">Exporter en Excel</button>
+        <button class="gros-bouton bouton-secondaire" type="button" id="bouton-vider">Vider la liste</button>
+      </div>
+      <ul class="liste-non-inscrits" id="liste-non-inscrits"></ul>
     </section>
 
     <!-- Écran 3 : import de la liste -->
@@ -71,11 +76,77 @@
     <!-- Écran 4 : réglages et à propos -->
     <section id="ecran-reglages" class="ecran">
       <h2>Réglages</h2>
-      <p class="info">Club du cours, prénom et email de l'administration : à la prochaine étape.</p>
+      <form id="form-reglages" class="formulaire formulaire-profil">
+        <fieldset>
+          <legend>Club où tu donnes le cours</legend>
+          <div class="choix-clubs"></div>
+          <input name="club" required autocomplete="off" placeholder="Nom du club" aria-label="Club où tu donnes le cours">
+        </fieldset>
+        <label>Ton prénom <span class="petit">(pour signer les emails)</span>
+          <input name="prenom" autocomplete="given-name">
+        </label>
+        <label>Email de l'administration
+          <input name="emailAdmin" type="email" inputmode="email" autocomplete="off" placeholder="adresse@exemple.ch">
+        </label>
+        <button class="gros-bouton" type="submit">Enregistrer</button>
+        <p class="confirmation" hidden>✓ Réglages enregistrés</p>
+      </form>
       <h2>À propos</h2>
       <p class="info">Version <span id="version"></span></p>
     </section>
   </main>
+
+  <!-- Premier lancement : club du cours, prénom, email de l'administration -->
+  <dialog id="bienvenue" class="fiche">
+    <form id="form-bienvenue" class="formulaire formulaire-profil">
+      <p class="fiche-statut statut-neutre">Bienvenue</p>
+      <fieldset>
+        <legend>Dans quel club donnes-tu le cours ?</legend>
+        <div class="choix-clubs"></div>
+        <input name="club" required autocomplete="off" placeholder="Autre club" aria-label="Club où tu donnes le cours">
+      </fieldset>
+      <label>Ton prénom <span class="petit">(pour signer les emails)</span>
+        <input name="prenom" autocomplete="given-name">
+      </label>
+      <label>Email de l'administration
+        <input name="emailAdmin" type="email" inputmode="email" autocomplete="off" placeholder="adresse@exemple.ch">
+      </label>
+      <p class="petit">Tu pourras tout modifier plus tard dans Réglages.</p>
+      <button class="gros-bouton" type="submit">Commencer</button>
+    </form>
+  </dialog>
+
+  <!-- Noter une personne non inscrite, puis prévenir l'administration -->
+  <dialog id="dialogue-non-inscrit" class="fiche fiche-rouge">
+    <form id="form-non-inscrit" class="formulaire">
+      <p class="fiche-statut statut-rouge">Noter un non-inscrit</p>
+      <label>Nom et prénom
+        <input name="nomPrenom" required autocomplete="off" autocapitalize="words">
+      </label>
+      <label>Téléphone <span class="petit">(conseillé, celui d'un parent pour un enfant)</span>
+        <input name="telephone" type="tel" inputmode="tel" autocomplete="off">
+      </label>
+      <fieldset class="choix-raison">
+        <legend>Raison</legend>
+        <label><input type="radio" name="raison" value="Cours d'essai"><span>Cours d'essai</span></label>
+        <label><input type="radio" name="raison" value="Dit être inscrit"><span>Dit être inscrit</span></label>
+        <label><input type="radio" name="raison" value="Autre"><span>Autre</span></label>
+      </fieldset>
+      <label>Remarque
+        <input name="remarque" autocomplete="off">
+      </label>
+      <button class="gros-bouton" type="submit">Enregistrer</button>
+      <button class="gros-bouton bouton-secondaire" type="button" id="annuler-non-inscrit">Annuler</button>
+    </form>
+    <div id="non-inscrit-enregistre" class="formulaire" hidden>
+      <p class="fiche-statut statut-neutre">✓ Noté</p>
+      <h3 id="enregistre-nom"></h3>
+      <p class="petit" id="enregistre-infos"></p>
+      <div id="enregistre-message"></div>
+      <button class="gros-bouton" type="button" id="bouton-prevenir">✉ Prévenir l'administration</button>
+      <button class="gros-bouton bouton-secondaire" type="button" id="bouton-terminer">Terminer</button>
+    </div>
+  </dialog>
 
   <!-- Fiche d'un membre (téléphone, email) -->
   <dialog id="fiche" class="fiche">
@@ -110,6 +181,8 @@
   <script src="import.js"></script>
   <script src="db.js"></script>
   <script src="recherche.js"></script>
+  <script src="reglages.js"></script>
+  <script src="non-inscrits.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

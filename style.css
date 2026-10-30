@@ -230,6 +230,115 @@ h2:not(:first-child) { margin-top: 36px; }
 }
 .gros-bouton.bouton-secondaire { color: var(--papier); background: var(--trait); }
 
+/* Bouton blanc dans l'écran rouge */
+.gros-bouton.bouton-noter {
+  margin-top: 22px;
+  max-width: 360px;
+  color: #b0121d;
+  background: #fff;
+}
+
+/* ----- Formulaires ----- */
+.formulaire { display: grid; gap: 16px; }
+.formulaire label, .formulaire legend { display: grid; gap: 6px; font-weight: 700; }
+.formulaire fieldset { margin: 0; padding: 0; border: none; display: grid; gap: 10px; }
+.formulaire legend { margin-bottom: 10px; padding: 0; }
+.formulaire input:not([type="radio"]) {
+  width: 100%;
+  height: 56px;
+  padding: 0 14px;
+  font: 600 1.1rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--encre);
+  background: var(--papier);
+  border: 3px solid var(--papier);
+  border-radius: 12px;
+  outline: none;
+}
+.formulaire input:focus { border-color: var(--rouge-clair); }
+.formulaire .gros-bouton { margin-top: 4px; }
+.confirmation { margin: 0; text-align: center; font-weight: 700; color: var(--vert); }
+
+/* Gros boutons des clubs (réglages et bienvenue) */
+.choix-clubs { display: flex; flex-wrap: wrap; gap: 10px; }
+.puce-club {
+  min-height: 52px;
+  padding: 0 18px;
+  font: 800 1rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.06em;
+  color: var(--couleur-club);
+  background: transparent;
+  border: 3px solid var(--couleur-club);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.puce-club[aria-pressed="true"] { color: var(--encre); background: var(--couleur-club); }
+
+/* Choix de la raison : trois gros boutons */
+.choix-raison { grid-template-columns: repeat(3, 1fr); }
+.choix-raison legend { grid-column: 1 / -1; }
+.choix-raison label { display: block; }
+.choix-raison input { position: absolute; opacity: 0; pointer-events: none; }
+.choix-raison span {
+  display: grid;
+  place-items: center;
+  min-height: 60px;
+  padding: 6px;
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  border: 3px solid var(--trait);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.choix-raison input:checked + span { color: var(--encre); background: var(--papier); border-color: var(--papier); }
+.choix-raison input:focus-visible + span { outline: 3px solid var(--rouge-clair); outline-offset: 2px; }
+
+.fiche.fiche-rouge { border-top-color: #d91f2b; }
+.fiche-statut.statut-rouge { color: #ff5a63; }
+.fiche-statut.statut-neutre { color: var(--papier); }
+.fiche { max-height: 92vh; overflow-y: auto; }
+
+/* ----- Écran Non-inscrits ----- */
+.actions-non-inscrits { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.actions-non-inscrits .gros-bouton { font-size: 1.05rem; padding: 10px; }
+.liste-non-inscrits { list-style: none; margin: 0; padding: 0; }
+.carte-non-inscrit { border-left: 8px solid #d91f2b; border-radius: 0 14px 14px 0; }
+.non-inscrit-nom { font-size: 1.2rem; font-weight: 800; }
+.non-inscrit-details { margin-top: 6px !important; font-size: 0.95rem; }
+.non-inscrit-actions { display: flex; gap: 10px; margin-top: 12px; }
+.non-inscrit-actions + div:not(:empty) { margin-top: 12px; }
+.non-inscrit-actions + div .bandeau { margin: 0; }
+.petit-bouton {
+  min-height: 46px;
+  padding: 0 16px;
+  font: 700 0.95rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--papier);
+  background: var(--rouge);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.petit-bouton.fait { color: var(--vert); background: transparent; border: 2px solid var(--vert); }
+.petit-bouton.discret { color: var(--cendre); background: transparent; border: 2px solid var(--trait); }
+
+/* Nombre de non-inscrits sur l'onglet */
+.onglet[data-compte]:not([data-compte=""])::after {
+  content: attr(data-compte);
+  position: absolute;
+  top: 8px;
+  left: calc(50% + 6px);
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  background: #d91f2b;
+  border-radius: 11px;
+}
+
 .info { color: var(--cendre); }
 
 .etat-vide {

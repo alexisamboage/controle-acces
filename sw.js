@@ -14,6 +14,8 @@ const FICHIERS = [
   'import.js',
   'db.js',
   'recherche.js',
+  'reglages.js',
+  'non-inscrits.js',
   'lib/xlsx.full.min.js',
   'manifest.webmanifest',
   'polices/anton.woff2',
